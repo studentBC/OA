@@ -3,13 +3,17 @@ Please use Python version 3.7+
 """
 
 import csv
-import sys
+import Expression
+from collections import deque
 from typing import List, Tuple
+from Expression import *
+wordDict = dict()
 
 class TweetIndex:
     # Starter code--please override
     def __init__(self):
         self.list_of_tweets = []
+        
 
     # Starter code--please override
     def process_tweets(self, list_of_timestamps_and_tweets: List[Tuple[str, int]]) -> None:
@@ -19,12 +23,25 @@ class TweetIndex:
 
         :param list_of_timestamps_and_tweets: A list of tuples consisting of a timestamp and a tweet.
         """
+        count = 0
         for row in list_of_timestamps_and_tweets:
             timestamp = int(row[0])
             tweet = str(row[1])
-            uniq = set(tweet.split(" "))
-            self.list_of_tweets.append((tweet, timestamp, uniq))
-
+            words = set(tweet.split(" "))
+            for w in words:
+                # print(w)
+                if w in wordDict.keys():
+                    wordDict[w].add(timestamp)
+                    # self.wordDict[w].append(timestamp)
+                    # self.wordDict[w].append(count)
+                else:
+                    wordDict[w] = set()
+                    wordDict[w].add(timestamp)
+                    # self.wordDict[w].append(timestamp)
+                    # self.wordDict[w].append(count)
+            # print("---------------------------")
+            count+=1
+            
     # Starter code--please override
     def search(self, query: str) -> List[Tuple[str, int]]:
         """
@@ -52,6 +69,8 @@ class TweetIndex:
 if __name__ == "__main__":
     # A full list of tweets is available in data/tweets.csv for your use.
     tweet_csv_filename = "../data/small.csv"
+    # importlib.import_module("Expression")
+    # execfile("Expression.py")
     list_of_tweets = []
     with open(tweet_csv_filename, "r") as f:
         csv_reader = csv.reader(f, delimiter=",")
@@ -63,16 +82,24 @@ if __name__ == "__main__":
             tweet = str(row[1])
             list_of_tweets.append((timestamp, tweet))
 
-    #read command line argument
-    n = len(sys.argv)
-    for i in range(1, n):
-        print(sys.argv[i], end = " ")
+    #read command line argument eg: Noovi & is & ( fast | ( very & quick ) )
+    cl = str(input()).strip()
+    print(cl)
     
     ti = TweetIndex()
+    #implied the tweets are sorted by timestamp
     ti.process_tweets(list_of_tweets)
+    exp = Expression(cl, wordDict)
+    # exp.__init__(cl, wordDict)
+    exp.Evaluate()
+    # for s in result:
+    #     print(s)
     assert ti.search("hello") == ('hello this is also neeva', 15)
     assert ti.search("hello me") == ('hello not me', 14)
     assert ti.search("hello bye") == ('hello bye', 3)
     assert ti.search("hello this bob") == ('hello neeva this is bob', 11)
     assert ti.search("notinanytweets") == ('', -1)
     print("Success!")
+
+
+
