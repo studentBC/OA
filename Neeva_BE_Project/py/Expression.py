@@ -10,11 +10,12 @@ class Expression :
                   "|" : 2,
                   "(" : 1 } 
 
-    def __init__(self, exp_str, wd) :
+    def __init__(self, exp_str, wd, t2m) :
         self.exp_str = exp_str
         self.infix_tokens = []  
         self.postfix_tokens = []  
         self.wd = wd
+        self.t2m = t2m
 
     def Evaluate(self) :
         self.Tokenize()
@@ -111,5 +112,5 @@ class Expression :
         print("\n"+self.exp_str + " = " + str(lol))
         print(len(lol))
         for s in lol:
-            print (s)
+            print (t2m[s])
         

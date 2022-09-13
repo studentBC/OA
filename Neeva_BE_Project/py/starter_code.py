@@ -8,7 +8,7 @@ from collections import deque
 from typing import List, Tuple
 from Expression import *
 wordDict = dict()
-
+time2Msg = dict()
 class TweetIndex:
     # Starter code--please override
     def __init__(self):
@@ -28,6 +28,7 @@ class TweetIndex:
             timestamp = int(row[0])
             tweet = str(row[1])
             words = set(tweet.split(" "))
+            time2Msg[timestamp] = tweet
             for w in words:
                 # print(w)
                 if w in wordDict.keys():
@@ -91,7 +92,7 @@ if __name__ == "__main__":
     ti.process_tweets(list_of_tweets)
     # for key in wordDict.keys():
     #     print(key)
-    exp = Expression(cl, wordDict)
+    exp = Expression(cl, wordDict, time2Msg)
     # exp.__init__(cl, wordDict)
     exp.Evaluate()
     # for s in result:
