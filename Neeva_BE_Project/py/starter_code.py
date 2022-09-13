@@ -89,6 +89,8 @@ if __name__ == "__main__":
     ti = TweetIndex()
     #implied the tweets are sorted by timestamp
     ti.process_tweets(list_of_tweets)
+    # for key in wordDict.keys():
+    #     print(key)
     exp = Expression(cl, wordDict)
     # exp.__init__(cl, wordDict)
     exp.Evaluate()

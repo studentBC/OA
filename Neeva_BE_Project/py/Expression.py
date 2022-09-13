@@ -69,7 +69,7 @@ class Expression :
         print("Postfix expression : ", end=' ')
         for token in self.postfix_tokens :
             print(token, end=',')
-
+        print("\n----------------------------")
     # a and b are set of timestamp
     def AND(a, b) -> set():
         return a.intersection(b) 
@@ -78,22 +78,38 @@ class Expression :
         return a.union(b)
 
     def EvaluatePostfix(self) :
-
+        # for key, val in self.wd:
+        #     print(key)
         stack_result = deque()
-    
+        print("=== start to do EvaluatePostfix ===")
         while self.postfix_tokens :
             token = self.postfix_tokens.pop(0)
+            print(token)
+            if token[0].isalpha():
+                if token in self.wd.keys():
+                    stack_result.appendleft(self.wd[token])
+                else:
+                    stack_result.appendleft(set())
+            elif token[0] == '!':
+                tmp = set()
+                for key in self.wd.keys():
+                    if key != token[1:]:
+                        tmp = tmp.union(self.wd[key])
+                stack_result.appendleft(tmp)      
 
-            if token[0].isalpha() :
-               stack_result.appendleft(token)
             else :
                x = stack_result.popleft()
                y = stack_result.popleft()
 
                # Note the order of operands(x, y), result equals [y(operator)x]
                if (token == "|") :
-                   stack_result.appendleft(self.wd[y].union(self.wd[x]))
+                   stack_result.appendleft(x.union(y))
                elif (token == "&") :
-                   stack_result.appendleft(self.wd[y].intersection(self.wd[x]) )
-    
-        print("\n"+self.exp_str + " = " + str(stack_result.popleft()))
+                    #if y in self.wd.keys() and x in  self.wd.keys():
+                    stack_result.appendleft(x.intersection(y) )
+        lol = stack_result.popleft()
+        print("\n"+self.exp_str + " = " + str(lol))
+        print(len(lol))
+        for s in lol:
+            print (s)
+        
