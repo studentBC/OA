@@ -40,32 +40,35 @@ class Expression :
     
         while self.infix_tokens :
     
-             token = self.infix_tokens.pop(0) 
+            token = self.infix_tokens.pop(0) 
+            #print("got token: ", token)
+            if token == "(" :
+                stack.appendleft(token)
 
-             if token == "(" :
-                 stack.appendleft(token)
+            elif token == ")" :
+                # Pop out all the operators from the stack and append them to 
+                # postfix expression till an opening bracket "(" is found
 
-             elif token == ")" :
-                 # Pop out all the operators from the stack and append them to 
-                 # postfix expression till an opening bracket "(" is found
+                while stack[0] != "(" : # peek at topmost item in the stack
+                    self.postfix_tokens.append(stack.popleft())
+                stack.popleft()
 
-                 while stack[0] != "(" : # peek at topmost item in the stack
-                     self.postfix_tokens.append(stack.popleft())
-                 stack.popleft()
+            elif token == "&" or token == "|" :
 
-             elif token == "&" or token == "|" :
+                # Pop out the operators with higher precedence from the top of the
+                # stack and append them to the postfix expression before
+                # pushing the current operator onto the stack.
+                while ( stack and self.precedence[stack[0]] >= self.precedence[token] ) : 
+                    self.postfix_tokens.append(stack.popleft())
+                stack.appendleft(token)
 
-                 # Pop out the operators with higher precedence from the top of the
-                 # stack and append them to the postfix expression before
-                 # pushing the current operator onto the stack.
-                 while ( stack and self.precedence[stack[0]] >= self.precedence[token] ) : 
-                     self.postfix_tokens.append(stack.popleft())
-                 stack.appendleft(token)
-
-             else :
-                 # Positions of the operands do not change in the postfix
-                 # expression so append an operand as it is to the postfix expression
-                 self.postfix_tokens.append(token)
+            else :
+                # Positions of the operands do not change in the postfix
+                # expression so append an operand as it is to the postfix expression
+                if len(self.postfix_tokens) > 0 and self.postfix_tokens[-1] == '!':
+                    token = self.postfix_tokens[-1]+token
+                    self.postfix_tokens.pop()
+                self.postfix_tokens.append(token)
     
         print("Postfix expression : ", end=' ')
         for token in self.postfix_tokens :
@@ -82,10 +85,10 @@ class Expression :
         # for key, val in self.wd:
         #     print(key)
         stack_result = deque()
-        print("=== start to do EvaluatePostfix ===")
+        print("start to do EvaluatePostfix ...")
         while self.postfix_tokens :
             token = self.postfix_tokens.pop(0)
-            print(token)
+            #print(token)
             if token[0].isalpha():
                 if token in self.wd.keys():
                     stack_result.appendleft(self.wd[token])
@@ -93,9 +96,10 @@ class Expression :
                     stack_result.appendleft(set())
             elif token[0] == '!':
                 tmp = set()
+                #print("try to find ", token[1:])
                 for key in self.wd.keys():
                     if key != token[1:]:
-                        tmp = tmp.union(self.wd[key])
+                        tmp = tmp.union(self.wd[key]-self.wd[token[1:]])
                 stack_result.appendleft(tmp)      
 
             else :
@@ -108,9 +112,17 @@ class Expression :
                elif (token == "&") :
                     #if y in self.wd.keys() and x in  self.wd.keys():
                     stack_result.appendleft(x.intersection(y) )
-        lol = stack_result.popleft()
-        print("\n"+self.exp_str + " = " + str(lol))
-        print(len(lol))
-        for s in lol:
-            print (t2m[s])
+        lol = list(stack_result.popleft())
+        #print("\n"+self.exp_str + " = " + str(lol))
+        #print(len(lol))
+        #sorted(lol)
+        print("-------- Result -------")
+        c = 0
+        print("msg          timestamp")
+        for i in reversed(lol):
+            #print ("msg: ", self.t2m[i]," timestamp: ", i)
+            print (self.t2m[i], i)
+            c+=1
+            if c == 5:
+                break
         

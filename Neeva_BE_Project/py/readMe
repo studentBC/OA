@@ -1,0 +1,54 @@
+##### Your approach to the problem.
+
+Here is my whole process to do this problem
+1. 	let user enter csv to read the file and do preprocessing
+2. 	What I will do in preprocess is that I will use two map first: [key: timestamp, value: tweet msg]
+	second: [key: word from each tweet msg, value: a set of timestamp] for the future search
+	notice that the key in the second map already transfer to lower case to reach case incensitive request
+3. 	let user enter search expression
+4.	use the function that I found and modified in the Internet to transfer infix to postfix
+5.	do the evaluation by using python set intersection, union, difference ...etc
+6.	sort the result and print the latest 5 recent tweet msg by using the timestamp as key 
+	to retrieve the original msg from the first map
+
+##### How to run your program (especially important if you use a language other than go or python).
+
+1.	python starter_code.py
+2.	it will ask user to enter the file name which needs to include the path or user just press enter to use the default csv file
+3.	enter the search expression (user can enter space or not enter space)
+
+Example:
+
+(base) chinlung@Chins-MacBook-Pro py % python starter_code.py
+enter the tweet csv file (path included) that you want to test or press enter to use default csv file:
+
+enter what you want to search it will give you the latest 5 tweeter msg:
+hola | (HellO & !IS)
+
+Expression : hola|(hello&!is)
+Postfix expression :  hola,hello,!is,&,|,
+----------------------------
+start to do EvaluatePostfix ...
+-------- Result -------
+msg          timestamp
+hello not me 14
+hello me 13
+hello stuff 12
+hello hello 9
+hello world 8
+Success!
+
+
+##### Any design decisions, tradeoffs, or assumptions you made.
+Using two map costs lots of memory. However, it can achieve O(1) speed so the assumption
+I make here should be our data is not too large to run on a x86 computer.
+
+
+##### Complexity analysis of your solution vs the starter code.
+For preprocessing word it cost us O(n)
+For processing infix to postfix costs us O(length of search expression)
+For set operation for user's search expression depends on python set library
+	eg: difference is performed with O(n), intersection is O(min(n, m)) ...etc
+
+Overall our time complexity will be decided by the preprocessing time which is O(n)
+so does our memory O(2n)
