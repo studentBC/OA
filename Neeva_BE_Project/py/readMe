@@ -7,7 +7,10 @@ Here is my whole process to do this problem
 	notice that the key in the second map already transfer to lower case to reach case incensitive request
 3. 	let user enter search expression
 4.	use the function that I found and modified in the Internet to transfer infix to postfix
-5.	do the evaluation by using python set intersection, union, difference ...etc
+5.	Do the evaluation by using python set intersection, union, difference, not ...etc
+	notice that for not operation I will not pop up two set to do the operation. What I do here is just finding
+	the complementary set of that search key word. As for & |, what I do is like usual evalutaion of postfix 
+	evaluation by poping up two set and do the &, |.
 6.	sort the result and print the latest 5 recent tweet msg by using the timestamp as key 
 	to retrieve the original msg from the first map
 
