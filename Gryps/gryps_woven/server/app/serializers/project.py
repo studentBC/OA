@@ -1,0 +1,12 @@
+from rest_framework import serializers
+
+from app.models import Project
+
+
+class ProjectSerializer(serializers.ModelSerializer):
+    owner = serializers.CharField()
+
+    class Meta:
+        model = Project
+        fields = ("__all__")
+        depth = 1
